@@ -1,0 +1,41 @@
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(235, 22, 22, 0.866),
+    transparent
+  );
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  height: 4px;
+  width: 60%;
+  border-radius: 50px;
+  background-color: #dedede;
+}
+
+.progress-filler {
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background-color: #000000;
+  transition: width 1s ease-in-out;
+}

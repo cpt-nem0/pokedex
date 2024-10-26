@@ -1,0 +1,13 @@
+.right-nav {
+  flex-direction: row;
+}
+.left-nav {
+  flex-direction: row-reverse;
+}
+
+.arrow-head-right {
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.arrow-head-left {
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
