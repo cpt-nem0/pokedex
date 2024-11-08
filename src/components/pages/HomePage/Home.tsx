@@ -1,46 +1,76 @@
-import React from "react";
-import Summary from "./Summary";
+import React, { useEffect, useState } from "react";
 import Image from "./Image";
-import PokemonDetails from "./PokemonDetails";
 import NavFooter from "./NavFooter";
+import PokemonDetails from "./PokemonDetails";
+import Summary from "./Summary";
 
+import { getPokemonHomeDetails } from "../../../service/pokemon-data";
+
+import { PokemonHomeDetails } from "../../../service/types";
 import "./styles.css";
 
 const Home: React.FC = () => {
-  const imageUrl =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/609.png";
+  const [pokemonCode, setPokemonCode] = useState<string>("25");
 
-  const pokemonCode = "609";
-  const pokemonName = "Chandelure";
-  const pokemonAbout =
-    "Do est voluptate ut veniam velit. Commodo eu enim occaecat aliqua irure sunt eiusmod ut deserunt et. Eu qui et reprehenderit deserunt occaecat. Dolor quis consequat enim aliqua quis in ut consectetur. Fugiat occaecat et adipisicing adipisicing duis ullamco enim sunt veniam nisi. Minim minim duis tempor qui pariatur eiusmod nisi laboris consequat nulla dolore exercitation.";
+  const [pokemonDetails, setPokemonDetails] = useState<PokemonHomeDetails>({
+    code: "",
+    name: "",
+    height: 0,
+    weight: 0,
+    description: "",
+    imageUrl: "",
+    cryUrl: "",
+    stats: {
+      hp: 0,
+      attack: 0,
+      defense: 0,
+      speed: 0,
+      "special attack": 0,
+      "special defense": 0,
+    },
+    types: {
+      weak_against: [],
+      strong_against: [],
+      types: [],
+    },
+  });
 
-  const pokemonStatsData = {
-    hp: 78,
-    attack: 84,
-    defense: 78,
-    speed: 109,
-    "sp. attack": 85,
-    "sp. defense": 100,
-  };
+  useEffect(() => {
+    const fetchPokemonData = async () => {
+      try {
+        const fetchedData = await getPokemonHomeDetails(pokemonCode);
+        setPokemonDetails(fetchedData);
+      } catch (error) {
+        console.error("Error fetching Pokemon data:", error);
+      }
+    };
 
-  const weakAgainst = ["water", "electric", "fairy"];
-  const strongAgainst = ["poison", "rock", "grass"];
-  const type = ["fire", "poison"];
+    fetchPokemonData();
+  }, [pokemonCode]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="flex flex-1 space-x-4 items-center px-12 gap-12 -mb-2">
-        <Summary name={pokemonName} code={pokemonCode} about={pokemonAbout} />
-        <Image url={imageUrl} />
+        <Summary
+          name={pokemonDetails?.name}
+          code={pokemonDetails?.code}
+          about={pokemonDetails?.description}
+          height={pokemonDetails?.height}
+          weight={pokemonDetails?.weight}
+        />
+        <Image url={pokemonDetails?.imageUrl} cryUrl={pokemonDetails?.cryUrl} />
         <PokemonDetails
-          pokemonStats={pokemonStatsData}
-          weakAgainst={weakAgainst}
-          strongAgainst={strongAgainst}
-          type={type}
+          pokemonStats={pokemonDetails?.stats}
+          types={pokemonDetails?.types.types}
+          weakAgainst={pokemonDetails?.types.weak_against}
+          strongAgainst={pokemonDetails?.types.strong_against}
         />
       </div>
-      <NavFooter />
+      <NavFooter
+        code={pokemonCode}
+        totalPokemon={1000}
+        onNavClick={setPokemonCode}
+      />
     </div>
   );
 };
