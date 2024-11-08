@@ -1,19 +1,13 @@
 import React from "react";
 import ProgressBar from "../../common/ProgressBar";
 import PokemonType from "../../common/PokemonType";
+import { PokemonStats } from "../../../service/types";
 
 interface PokemonDetailsProps {
-  pokemonStats: {
-    hp: number;
-    attack: number;
-    defense: number;
-    speed: number;
-    "sp. attack"?: number;
-    "sp. defense"?: number;
-  };
+  pokemonStats: PokemonStats;
   weakAgainst: string[];
   strongAgainst: string[];
-  type: string[];
+  types: string[];
 }
 
 interface AttributesProps {
@@ -38,19 +32,19 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
   pokemonStats,
   weakAgainst,
   strongAgainst,
-  type,
+  types,
 }) => {
   return (
     <div className="flex-1 flex flex-col gap-8 pl-8">
       <div className="flex flex-col gap-6">
-        <Attributes label="Type" types={type} />
+        <Attributes label="Type" types={types} />
         <Attributes label="Weak Against" types={weakAgainst} />
         <Attributes label="Strong Against" types={strongAgainst} />
       </div>
       <div className="flex flex-col gap-2.5 text-sm">
         {Object.entries(pokemonStats).map(([stat, value]) => (
           <div key={stat}>
-            <p>{`${stat.toUpperCase()}: ${value}`}</p>
+            <p className="uppercase">{`${stat}: ${value}`}</p>
             <ProgressBar progress={value} />
           </div>
         ))}

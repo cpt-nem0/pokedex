@@ -2,9 +2,10 @@ import React, { useRef } from "react";
 
 interface ImageProp {
   url: string;
+  cryUrl?: string;
 }
 
-const Image: React.FC<ImageProp> = ({ url }) => {
+const Image: React.FC<ImageProp> = ({ url, cryUrl }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const handleAudioPlay = () => {
@@ -20,10 +21,7 @@ const Image: React.FC<ImageProp> = ({ url }) => {
     >
       <img src={url} className="w-full h-full object-contain" />
       <div className="w-full h-[90px] border-2 border-[#F1F0F5] rounded-[100%]"></div>
-      <audio
-        src="https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/legacy/609.ogg"
-        ref={audioRef}
-      ></audio>
+      <audio src={cryUrl} ref={audioRef}></audio>
     </div>
   );
 };

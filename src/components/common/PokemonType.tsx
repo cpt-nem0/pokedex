@@ -15,9 +15,9 @@ const PokemonType: React.FC<PokemonTypeProps> = ({ typeName }) => {
 
   return (
     <div
-      className={`px-2 py-[1px] rounded-full items-center content-center w-fit`}
+      className={`px-2 py-[1px] rounded-full items-center content-center w-fit uppercase`}
       style={{ backgroundColor: typeColor }}
-      title={typeName.toUpperCase()}
+      title={typeName}
     >
       <span className="text-sm uppercase" style={{ color: typeTextColor }}>
         {typeName}
