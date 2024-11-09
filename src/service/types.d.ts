@@ -58,6 +58,14 @@ interface PokemonHomeDetails {
   stats: PokemonStats;
 }
 
+interface PokemonCardData {
+  code: string;
+  name: string;
+  gifUrl?: string;
+  imageUrl?: string;
+  types?: string[];
+}
+
 export {
   PokemonHomeDetails,
   PokemonType,
@@ -66,4 +74,5 @@ export {
   FlavorTextEntry,
   PokemonTypesInfo,
   PokeNavInfo,
+  PokemonCardData,
 };
