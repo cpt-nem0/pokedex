@@ -1,13 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PokeCard from "./PokeCard";
 import SearchBar from "../../common/SearchBar";
+import Pagination from "../../common/Pagination";
+import { PokemonCardData } from "../../../service/types";
+import {
+  getPokemonGridData,
+  getTotalPokemonCount,
+} from "../../../service/pokemon-data";
+import AnimatedLoader from "../../common/Loading";
 
 const Pokedex: React.FC = () => {
-  const imageUrl =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/609.gif";
-  const pokeCode = "609";
-  const pokeName = "Chandelure";
-  const pokeTypes = ["Fire", "Ghost"];
+  // const [gridElementCount, setGridElementCount] = useState<number>(24);
+  const gridElementCount = 24;
+  const [totalPokemonCount, setTotalPokemonCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pokemonsInfo, setPokemonsInfo] = useState<PokemonCardData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchPokemons = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getPokemonGridData(currentPage, gridElementCount);
+        console.log(data);
+        setPokemonsInfo(data);
+
+        const totalPokemonCount = await getTotalPokemonCount();
+        setTotalPokemonCount(totalPokemonCount);
+        console.log(totalPokemonCount);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPokemons();
+  }, [gridElementCount, currentPage]);
+
+  if (isLoading) {
+    return <AnimatedLoader />;
+  }
 
   return (
     <div className="w-full h-auto">
@@ -16,33 +49,28 @@ const Pokedex: React.FC = () => {
       </div>
       <div className="p-12">
         <div className="grid grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] gap-y-20 justify-items-center">
-          <PokeCard
-            image={imageUrl}
-            code={pokeCode}
-            name={pokeName}
-            types={pokeTypes}
-          />
-          <PokeCard
-            image={imageUrl}
-            code={pokeCode}
-            name={pokeName}
-            types={pokeTypes}
-          />
-          <PokeCard
-            image={imageUrl}
-            code={pokeCode}
-            name={pokeName}
-            types={pokeTypes}
-          />
-          <PokeCard
-            image={imageUrl}
-            code={pokeCode}
-            name={pokeName}
-            types={pokeTypes}
-          />
+          {pokemonsInfo.map((pokemon, idx) => (
+            <PokeCard
+              key={idx}
+              image={
+                pokemon.gifUrl ||
+                pokemon.imageUrl ||
+                "https://upload.wikimedia.org/wikipedia/commons/3/39/Pokeball.PNG"
+              }
+              code={pokemon.code}
+              name={pokemon.name}
+              types={pokemon.types ?? []}
+            />
+          ))}
         </div>
       </div>
-      <div>{/* pagination */}</div>
+      <div className="flex items-center justify-center p-8">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalPokemonCount / gridElementCount)}
+          onPageClick={setCurrentPage}
+        />
+      </div>
     </div>
   );
 };

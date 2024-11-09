@@ -6,6 +6,7 @@ import {
   FlavorTextEntry,
   PokemonTypesInfo,
   PokeNavInfo,
+  PokemonCardData,
 } from "./types";
 
 const BASE_POKEMON_API = "https://pokeapi.co/api/v2";
@@ -36,7 +37,7 @@ const getRandomPokemonCodes = async (n: number = 10): Promise<number[]> => {
 };
 
 const getTotalPokemonCount = async (): Promise<number> => {
-  const pokemonCountEndpoint = `${POKEMON_SPECIES_ENDPOINT}/?limit=0`;
+  const pokemonCountEndpoint = `${POKEMON_DETAILS_ENDPOINT}/?limit=0`;
 
   try {
     const response = await fetch(pokemonCountEndpoint);
@@ -152,9 +153,42 @@ const getPokemonNavInfo = async (code: string): Promise<PokeNavInfo> => {
   return { code: code, imageUrl: data?.sprites?.front_default ?? "" };
 };
 
+const getPokemonGridData = async (
+  page: number,
+  limit: number
+): Promise<PokemonCardData[]> => {
+  const offset = (page - 1) * limit;
+
+  const pokemons = await fetch(
+    `${POKEMON_DETAILS_ENDPOINT}/?limit=${limit}&offset=${offset}`
+  );
+  const pokemonsList = await pokemons.json();
+
+  const pokemonData: PokemonCardData[] = await Promise.all(
+    pokemonsList?.results?.map(
+      async (pokeInfo: { name: string; url: string }) => {
+        const pokeRequest = await fetch(`${pokeInfo.url}`);
+        const data = await pokeRequest.json();
+        return {
+          code: String(data?.id || ""),
+          name: (data?.name || "").replace(/-/g, " "),
+          imageUrl: data?.sprites?.front_default ?? "",
+          gifUrl: data?.sprites?.other?.showdown?.front_default ?? "",
+          types: data?.types?.map(
+            (type: { slot: number; type: PokemonType }) => type.type.name
+          ),
+        };
+      }
+    )
+  );
+
+  return pokemonData;
+};
+
 export {
   getRandomPokemonCodes,
   getPokemonHomeDetails,
   getPokemonNavInfo,
   getTotalPokemonCount,
+  getPokemonGridData,
 };
