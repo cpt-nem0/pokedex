@@ -17,7 +17,7 @@ const getRandomPokemonCodes = async (n: number = 10): Promise<number[]> => {
   if (n < 1) {
     throw new Error(`'n' must be a positive integer`);
   }
-  const totalPokemonCount = await getTotalPokemonIDs();
+  const totalPokemonCount = await getTotalPokemonCount();
 
   if (n > totalPokemonCount) {
     throw new Error(
@@ -35,7 +35,7 @@ const getRandomPokemonCodes = async (n: number = 10): Promise<number[]> => {
   return Array.from(randomPokemonIds);
 };
 
-const getTotalPokemonIDs = async (): Promise<number> => {
+const getTotalPokemonCount = async (): Promise<number> => {
   const pokemonCountEndpoint = `${POKEMON_SPECIES_ENDPOINT}/?limit=0`;
 
   try {
@@ -152,4 +152,9 @@ const getPokemonNavInfo = async (code: string): Promise<PokeNavInfo> => {
   return { code: code, imageUrl: data?.sprites?.front_default ?? "" };
 };
 
-export { getRandomPokemonCodes, getPokemonHomeDetails, getPokemonNavInfo };
+export {
+  getRandomPokemonCodes,
+  getPokemonHomeDetails,
+  getPokemonNavInfo,
+  getTotalPokemonCount,
+};

@@ -4,13 +4,19 @@ import NavFooter from "./NavFooter";
 import PokemonDetails from "./PokemonDetails";
 import Summary from "./Summary";
 
-import { getPokemonHomeDetails } from "../../../service/pokemon-data";
+import {
+  getPokemonHomeDetails,
+  getTotalPokemonCount,
+} from "../../../service/pokemon-data";
 
 import { PokemonHomeDetails } from "../../../service/types";
 import "./styles.css";
+import AnimatedLoader from "../../common/Loading";
 
 const Home: React.FC = () => {
+  const [totalPokemonCount, setTotalPokemonCount] = useState(0);
   const [pokemonCode, setPokemonCode] = useState<string>("25");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [pokemonDetails, setPokemonDetails] = useState<PokemonHomeDetails>({
     code: "",
@@ -37,16 +43,26 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const fetchPokemonData = async () => {
+      setIsLoading(true);
       try {
         const fetchedData = await getPokemonHomeDetails(pokemonCode);
         setPokemonDetails(fetchedData);
+
+        const totalPokemonCount = await getTotalPokemonCount();
+        setTotalPokemonCount(totalPokemonCount);
       } catch (error) {
         console.error("Error fetching Pokemon data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchPokemonData();
   }, [pokemonCode]);
+
+  if (isLoading) {
+    return <AnimatedLoader />;
+  }
 
   return (
     <div className="flex flex-col w-full">
@@ -68,7 +84,7 @@ const Home: React.FC = () => {
       </div>
       <NavFooter
         code={pokemonCode}
-        totalPokemon={1000}
+        totalPokemon={totalPokemonCount}
         onNavClick={setPokemonCode}
       />
     </div>
