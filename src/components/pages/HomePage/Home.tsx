@@ -66,7 +66,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-1 space-x-4 items-center px-12 gap-12 -mb-2">
+      <div className="flex flex-col md:flex-row flex-1 space-x-4 items-center px-4 md:px-12 gap-12 -mb-2">
         <Summary
           name={pokemonDetails?.name}
           code={pokemonDetails?.code}

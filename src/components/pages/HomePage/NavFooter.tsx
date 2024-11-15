@@ -100,7 +100,7 @@ const NavFooter: React.FC<NavFooterProps> = ({
   }, [code]);
 
   return (
-    <div className="flex w-full h-[100px] px-[200px] justify-between pb-16">
+    <div className="flex w-full justify-between p-10 mt-4 md:pb-16 md:px-28">
       {showLeftNav ? (
         <NavButtons
           direction="left"

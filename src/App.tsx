@@ -5,7 +5,7 @@ import Header from "./components/common/Header";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen md:gap-8">
+    <div className="flex flex-col min-h-screen gap-8">
       <Header />
       <main className="flex flex-1 overflow-auto">
         <Routes>

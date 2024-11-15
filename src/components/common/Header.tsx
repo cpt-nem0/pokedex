@@ -1,4 +1,4 @@
-import NavBar from "./NavBar";
+import NavBar, { HamburgerMenu } from "./NavBar";
 import pokemonSvg from "../../assets/pokemon.svg?url";
 
 const Header: React.FC = () => {
@@ -7,9 +7,9 @@ const Header: React.FC = () => {
       <div className="w-40 h-auto relative">
         <img src={pokemonSvg} className="w-full h-full object-contain" />
       </div>
-      <div className="absolute left-1/2 transform -translate-x-1/2">
-        <NavBar />
-      </div>
+
+      <NavBar />
+      <HamburgerMenu />
     </header>
   );
 };
